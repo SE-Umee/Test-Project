@@ -117,6 +117,32 @@ const CreateFranchise = () => {
 
     }
 
+    const selectManagerImage = () => {
+        launchImageLibrary(
+            {
+                mediaType: 'photo',
+                // includeBase64: false,
+            },
+            response => {
+
+                console.log('Response = ', response);
+                if (response.didCancel) {
+                    console.log('User cancelled image picker');
+                } else if (response.error) {
+                    console.log('ImagePicker Error: ', response.error);
+                    Alert.alert(response.error.toString())
+                } else if (response.customButton) {
+                    console.log('User tapped custom button: ', response.customButton);
+                } else {
+                    let source = response.assets[0].uri;
+                    setManagerImage(source);
+                }
+
+            },
+        );
+
+    }
+
 
     const GalleryImages = async () => {
         await launchImageLibrary(
@@ -202,8 +228,6 @@ const CreateFranchise = () => {
         setAddLocation(false)
     }
 
-    // ===================================='Map====================================
-
     return (
 
         <SafeAreaView style={styles.mainContainer}>
@@ -262,7 +286,7 @@ const CreateFranchise = () => {
                                     keyboardType="number-pad"
                                 />
                                 <View>
-                                    <Text>Upload Image</Text>
+                                    {/* <Text>Upload Image</Text> */}
                                     {!franchiseImage ?
                                         <TouchableOpacity
                                             onPress={() => selectImage()}
@@ -275,8 +299,8 @@ const CreateFranchise = () => {
                                                 uri: franchiseImage
                                             }}
                                                 style={{
-                                                    height: 100,
-                                                    width: 100,
+                                                    height: 70,
+                                                    width: 70,
                                                     borderRadius: 100
                                                 }} />
                                         </View>
@@ -413,13 +437,36 @@ const CreateFranchise = () => {
                     {addManager ?
                         <View>
                             <LinearGradient colors={[Colors.lg2, Colors.lg1]}>
-                                <TextInput
-                                    value={managerName}
-                                    placeholder='Branch Manager Name'
-                                    placeholderTextColor={Colors.grey20}
-                                    onChangeText={setManagerName}
-                                    style={{ ...InputText }}
-                                />
+                                <View style={{ flexDirection: 'row', margin: '2%', justifyContent: "space-between", alignItems: 'center' }}>
+                                    <TextInput
+                                        value={managerName}
+                                        placeholder='Branch Manager Name'
+                                        placeholderTextColor={Colors.grey20}
+                                        onChangeText={setManagerName}
+                                        style={{ ...InputText }}
+                                    />
+                                    <View>
+                                        {/* <Text>Upload Image</Text> */}
+                                        {!managerImage ?
+                                            <TouchableOpacity
+                                                onPress={() => selectManagerImage()}
+                                                style={styles.imageView}>
+                                                <Text>Click</Text>
+                                            </TouchableOpacity>
+                                            :
+                                            <View style={styles.imageView}>
+                                                <Image source={{
+                                                    uri: managerImage
+                                                }}
+                                                    style={{
+                                                        height: 70,
+                                                        width: 70,
+                                                        borderRadius: 100
+                                                    }} />
+                                            </View>
+                                        }
+                                    </View>
+                                </View>
                                 <TextInput
                                     value={managerEmail}
                                     placeholder='Branch Manager Email Address'
@@ -570,8 +617,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     imageView: {
-        height: 100,
-        width: 100,
+        height: 70,
+        width: 70,
         backgroundColor: Colors.grey30,
         borderRadius: 100,
         justifyContent: 'center',

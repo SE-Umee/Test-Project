@@ -6,9 +6,10 @@ import ImageModal from "../components/image-modal";
 import AdminScreen from "../screens/admin-screen";
 import CreateFranchise from "../screens/create-franchise";
 import AddNews from "../screens/add-news";
+// import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const Stack = createStackNavigator();
-
+// const Drawer = createDrawerNavigator();
 const franchiseScreen = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -33,10 +34,10 @@ const adminScreen = () => {
 }
 export { adminScreen }
 
-const DrawerNavigator = () => {
-    return (
-        <Drawer.Navigator>
-            <Drawer.Screen name="AddNews" component={AddNews} />
-        </Drawer.Navigator>
-    )
-}
+// const DrawerNavigator = () => {
+//     return (
+//         <Drawer.Navigator>
+//             <Drawer.Screen name="AddNews" component={AddNews} />
+//         </Drawer.Navigator>
+//     )
+// }
