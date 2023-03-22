@@ -6,6 +6,7 @@ import ImageModal from "../components/image-modal";
 import AdminScreen from "../screens/admin-screen";
 import CreateFranchise from "../screens/create-franchise";
 import AddNews from "../screens/add-news";
+import UpdateFranchise from "../screens/update-franchise";
 // import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const Stack = createStackNavigator();
@@ -18,6 +19,7 @@ const franchiseScreen = () => {
             <Stack.Screen name="Detail" component={DetailsScreen} />
             <Stack.Screen name="Map" component={MapScreen} />
             <Stack.Screen name="ImageModal" component={ImageModal} options={{ presentation: 'modal' }} />
+            <Stack.Screen name="Edit" component={UpdateFranchise} />
         </Stack.Navigator>
     )
 }

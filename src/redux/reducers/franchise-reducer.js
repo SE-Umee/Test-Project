@@ -1,4 +1,5 @@
 import actionTypes from "../action-types";
+import { franchise } from "../actions/franchise-action";
 
 
 const initialState = {
@@ -16,6 +17,14 @@ export const franchisesReducer = (state = initialState, action) => {
             return {
                 ...state,
                 franchises: action.data ? [...state.franchises, action.data] : []
+            };
+        case actionTypes.UPDATE_FRANCHISE:
+            let index = state.franchises.findIndex(franchise => franchise._id === action.data._id);
+            let _cloneFranchise = [...state.franchises];
+            _cloneFranchise[index] = action.data
+            return {
+                ...state,
+                franchises: _cloneFranchise
             };
         default: {
             return state

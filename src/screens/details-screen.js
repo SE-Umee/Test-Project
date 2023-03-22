@@ -1,16 +1,18 @@
 import { StyleSheet, Text, View, Image, ScrollView, FlatList, Linking, TouchableOpacity, Platform, Alert } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, DetailImage, Typography, Colors, AvatarImage } from '../components/styles/style-sheet';
 import StarRating from 'react-native-star-rating';
 import { calculateAverageRating } from '../components/franchise-card';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 
 const DetailsScreen = ({ route }) => {
     const { item } = route.params;
     const navigation = useNavigation();
+
     const MakeCall = (number) => {
         let phoneNumber = '';
 
@@ -46,11 +48,14 @@ const DetailsScreen = ({ route }) => {
                             starSize={20}
                         />
                     </View>
-                    <TouchableOpacity
-                        onPress={() => navigation.goBack()}
-                        style={{ position: 'absolute', top: 30, left: 10 }}>
-                        <Ionicons name='arrow-back' size={24} onPress={() => navigation.goBack()} />
-                    </TouchableOpacity>
+                    <View style={{ position: 'absolute', top: 30, left: 10, flexDirection: 'row', justifyContent: "space-between", width: '100%' }}>
+                        <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Ionicons name='arrow-back' size={24} onPress={() => navigation.goBack()} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingRight: 15, marginTop: 10 }}>
+                            <Feather name='edit-2' size={24} onPress={() => navigation.navigate("Edit", { currentItem: item })} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <LinearGradient colors={[Colors.lg2, Colors.lg1]} style={styles.afterImageContent}>
                     <Text style={{ ...Typography.normal }}>Contact:</Text>
@@ -130,22 +135,26 @@ const DetailsScreen = ({ route }) => {
                     </View>
                     <View style={{ marginTop: "2%" }}>
                         <Text style={{ ...Typography.normal }}>Awards</Text>
-                        <View style={[styles.contactRows, { alignItems: "center" }]}>
-                            <Text style={{ ...Typography.small }}>Gold</Text>
-                            <Text style={{ ...Typography.small }}>{item?.manager?.awards[1]?.date}</Text>
-                            <View>
-                                <FontAwesome name='trophy' size={24} color={"#FDCC0D"} />
-                                <Text style={{ ...Typography.small }}>{item?.manager?.awards[0]?.points}</Text>
-                            </View>
-                        </View>
-                        <View style={[styles.contactRows, { alignItems: "center" }]}>
-                            <Text style={{ ...Typography.small }}>Silver</Text>
-                            <Text style={{ ...Typography.small }}>{item?.manager?.awards[1]?.date}</Text>
-                            <View>
-                                <FontAwesome name='trophy' size={24} color={"#C0C0C0"} />
-                                <Text style={{ ...Typography.small }}>{item?.manager?.awards[1]?.points}</Text>
-                            </View>
-                        </View>
+                        {item.manager.awards?.map((item) => (
+                            item.type === "gold" || item.type === "Gold" ?
+                                <View style={[styles.contactRows, { alignItems: "center" }]}>
+                                    <Text style={{ ...Typography.small }}>Gold</Text>
+                                    <Text style={{ ...Typography.small }}>{item?.date}</Text>
+                                    <View>
+                                        <FontAwesome name='trophy' size={24} color={"#FDCC0D"} />
+                                        <Text style={{ ...Typography.small }}>{item?.points}</Text>
+                                    </View>
+                                </View>
+                                :
+                                <View style={[styles.contactRows, { alignItems: "center" }]}>
+                                    <Text style={{ ...Typography.small }}>Silver</Text>
+                                    <Text style={{ ...Typography.small }}>{item?.date}</Text>
+                                    <View>
+                                        <FontAwesome name='trophy' size={24} color={"#C0C0C0"} />
+                                        <Text style={{ ...Typography.small }}>{item?.points}</Text>
+                                    </View>
+                                </View>
+                        ))}
                     </View>
                 </LinearGradient>
                 <LinearGradient colors={[Colors.lg2, Colors.lg1]} style={styles.afterImageContent}>
@@ -166,22 +175,27 @@ const DetailsScreen = ({ route }) => {
                 </LinearGradient>
                 <LinearGradient colors={[Colors.lg2, Colors.lg1]} style={styles.afterImageContent}>
                     <Text style={{ ...Typography.normal }}>Awards:</Text>
-                    <View style={[styles.contactRows, { alignItems: "center" }]}>
-                        <Text style={{ ...Typography.small }}>Gold</Text>
-                        <Text style={{ ...Typography.small }}>{item?.awards[0]?.date}</Text>
-                        <View>
-                            <FontAwesome name='trophy' size={24} color={"#FDCC0D"} />
-                            <Text style={{ ...Typography.small }}>{item?.awards[0]?.points}</Text>
-                        </View>
-                    </View>
-                    <View style={[styles.contactRows, { alignItems: "center" }]}>
-                        <Text style={{ ...Typography.small }}>Silver</Text>
-                        <Text style={{ ...Typography.small }}>{item?.awards[1]?.date}</Text>
-                        <View>
-                            <FontAwesome name='trophy' size={24} color={"#C0C0C0"} />
-                            <Text style={{ ...Typography.small }}>{item?.awards[1]?.points}</Text>
-                        </View>
-                    </View>
+
+                    {item.awards?.map((item) => (
+                        item.type === "gold" || item.type === "Gold" ?
+                            <View style={[styles.contactRows, { alignItems: "center" }]}>
+                                <Text style={{ ...Typography.small }}>Gold</Text>
+                                <Text style={{ ...Typography.small }}>{item?.date}</Text>
+                                <View>
+                                    <FontAwesome name='trophy' size={24} color={"#FDCC0D"} />
+                                    <Text style={{ ...Typography.small }}>{item?.points}</Text>
+                                </View>
+                            </View>
+                            :
+                            <View style={[styles.contactRows, { alignItems: "center" }]}>
+                                <Text style={{ ...Typography.small }}>Silver</Text>
+                                <Text style={{ ...Typography.small }}>{item?.date}</Text>
+                                <View>
+                                    <FontAwesome name='trophy' size={24} color={"#C0C0C0"} />
+                                    <Text style={{ ...Typography.small }}>{item?.points}</Text>
+                                </View>
+                            </View>
+                    ))}
                 </LinearGradient>
 
             </ScrollView>

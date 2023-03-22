@@ -13,9 +13,6 @@ import { useSelector } from 'react-redux';
 const MapScreen = ({ route }) => {
     const allFranchises = useSelector(state => state.franchise.franchises);
     const { item } = route.params;
-    console.log('====================================');
-    console.log(item);
-    console.log('====================================');
     const navigation = useNavigation();
     const [cLatitude, setCLatitude] = useState();
     const [cLongitude, setCLongitude] = useState();

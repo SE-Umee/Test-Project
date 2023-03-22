@@ -8,27 +8,32 @@ import {
     TouchableOpacity,
     Image,
     Dimensions,
-    Alert
+    Alert,
+    FlatList
 } from 'react-native'
 import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { Colors, Container, InputText, Typography } from '../components/styles/style-sheet'
 import LinearGradient from 'react-native-linear-gradient'
 import SelectDropdown from 'react-native-select-dropdown'
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { launchImageLibrary, openPicker } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { useDispatch } from 'react-redux'
 import actionTypes from '../redux/action-types'
 import { franchise } from '../redux/actions/franchise-action'
 import MapView, { Marker } from 'react-native-maps'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+const UpdateFranchise = ({ route }) => {
+    const { currentItem } = route.params;
 
 
-const CreateFranchise = () => {
     const dispatch = useDispatch();
 
     const navigation = useNavigation()
 
+    const [id, setId] = useState("");
     const [branchCode, setBranchCode] = useState("");
     const [category, setCategory] = useState("");
     const [employees, setEmployees] = useState("");
@@ -49,21 +54,30 @@ const CreateFranchise = () => {
     const [awards, setAwards] = useState([]);
     const [gallery, setGallery] = useState([]);
     const [mapAddress, setMapAddress] = useState({});
-    const [addManager, setAddManager] = useState(false);
     const [managerName, setManagerName] = useState("");
     const [managerEmail, setManagerEmail] = useState("");
     const [managerImage, setManagerImage] = useState("");
     const [managerAddress, setManagerAddress] = useState("");
     const [managerAwards, setManagerAwards] = useState([]);
+    const [rating, setRating] = useState([]);
     const [managerPermanentAddress, setManagerPermanentAddress] = useState("");
     const [dob, setDOB] = useState("");
     const [domicile, setDomicile] = useState("");
     const [managerJoiningDate, setManagerJoiningDate] = useState("");
-    const [dateOpen, setDateOpen] = useState(false)
-    const [addLocation, setAddLocation] = useState(false)
+    const [addLocation, setAddLocation] = useState(false);
+    const [addAward, setAddAward] = useState(false);
+    const [awardType, setAwardType] = useState('');
+    const [awardDate, setAwardDate] = useState("");
+    const [awardPoints, setAwardPointes] = useState("");
+    const [addManagerAward, setAddManagerAward] = useState(false);
+    const [managerAwardType, setManagerAwardType] = useState('');
+    const [managerAwardDate, setManagerAwardDate] = useState("");
+    const [managerAwardPoints, setManagerAwardPointes] = useState("");
     const relative = ["Punjab ", "KPK", "Sindh", "Balochistan", "Gilgit-Baltistan"];
+
+
     const refMap = useRef(null);
-    const [region, setRegion] = useState('');
+    const [region, setRegion] = useState();
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
     const window = Dimensions.get('window');
@@ -71,16 +85,16 @@ const CreateFranchise = () => {
     const LATITUDE_DELTA = 10;
     const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height)
     const INITIAL_POSITION = {
-        latitude: 30.375320,
-        longitude: 69.345116,
+        latitude: latitude,
+        longitude: longitude,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA
     }
     useEffect(() => {
         {
             region === undefined ? (
-                setLatitude(INITIAL_POSITION.latitude),
-                setLongitude(INITIAL_POSITION.longitude)
+                setLatitude(currentItem.map_address.latitude),
+                setLongitude(currentItem.map_address.longitude)
             )
                 : (
                     setLatitude(region.latitude),
@@ -89,25 +103,42 @@ const CreateFranchise = () => {
         }
     }, [region])
 
-    const CancelManager = () => {
-        setManagerName("")
-        setManagerEmail("")
-        setManagerAddress("")
-        setManagerPermanentAddress("")
-        setDOB("")
-        setDomicile("")
-        setManagerJoiningDate("")
-    }
 
+    useEffect(() => {
+        setId(currentItem._id)
+        setBranchCode(currentItem.code)
+        setCategory(currentItem.category)
+        setEmployees(currentItem.num_employees)
+        setProvince(currentItem.province)
+        setOpeningData(currentItem.opening_date)
+        setFranchiseImage(currentItem.image)
+        setStreet(currentItem.address.street)
+        setCity(currentItem.address.city)
+        setZip(currentItem.address.zip)
+        setCall(currentItem.contact.cell)
+        setEmail(currentItem.contact.email)
+        setPhone(currentItem.contact.phone)
+        setFax(currentItem.contact.fax)
+        setManagerName(currentItem.manager.full_name)
+        setManagerImage(currentItem.manager.image)
+        setManagerEmail(currentItem.manager.email)
+        setManagerAddress(currentItem.manager.address)
+        setManagerPermanentAddress(currentItem.manager.permanent_address)
+        setDOB(currentItem.manager.dob)
+        setDomicile(currentItem.manager.domicile)
+        setManagerJoiningDate(currentItem.manager.joining_date)
+        setOpening(currentItem.working_hours.opening)
+        setClosing(currentItem.working_hours.closing)
+        setBreakTime(currentItem.working_hours.break_time)
+        setHoliday(currentItem.working_hours.holiday)
+        setGallery(currentItem.gallery)
+        setAwards(currentItem.awards)
+        setManagerAwards(currentItem.manager.awards)
+        setRating(currentItem.public_ratings)
+        setLatitude(currentItem.map_address.latitude)
+        setLongitude(currentItem.map_address.longitude)
 
-    const AddLocation = () => {
-        setMapAddress({
-            latitude: latitude,
-            longitude: longitude
-        })
-
-        setAddLocation(false)
-    }
+    }, [currentItem])
     // ====================================images====================================
 
 
@@ -140,7 +171,6 @@ const CreateFranchise = () => {
         launchImageLibrary(
             {
                 mediaType: 'photo',
-                // includeBase64: false,
             },
             response => {
 
@@ -180,20 +210,14 @@ const CreateFranchise = () => {
                     let results = [];
                     response.assets.forEach(imageInfo => results.push(imageInfo.uri));
                     setGallery([...results, ...gallery]);
-
                     return (
                         Alert.alert('Image Added')
                     )
                 }
             },
         );
-
     }
     // ====================================Image====================================
-
-
-
-
     let address = {
         street: street,
         city: city,
@@ -222,7 +246,7 @@ const CreateFranchise = () => {
         break_time: breakTime,
         holiday: holiday
     }
-    const createFranchise = () => {
+    const updateFranchise = () => {
 
         if (branchCode === "") {
             Alert.alert("Branch Code can't be Empty")
@@ -280,7 +304,7 @@ const CreateFranchise = () => {
         }
         else {
             let obj = {
-                _id: Math.random(),
+                _id: id,
                 code: branchCode,
                 category: category,
                 num_employees: employees,
@@ -288,6 +312,7 @@ const CreateFranchise = () => {
                 image: franchiseImage,
                 opening_date: openingData,
                 address: address,
+                public_ratings: rating,
                 map_address: mapAddress,
                 contact: contact,
                 manager: manager,
@@ -295,11 +320,49 @@ const CreateFranchise = () => {
                 gallery: gallery,
                 working_hours: WorkingHours
             }
-            dispatch(franchise(obj, actionTypes.ADD_NEW_FRANCHISE))
+            dispatch(franchise(obj, actionTypes.UPDATE_FRANCHISE))
             navigation.navigate("Home")
         }
     }
 
+    const AddLocation = () => {
+        setMapAddress({
+            latitude: latitude,
+            longitude: longitude
+        })
+        setAddLocation(false)
+    }
+
+    const RemoveGalleryImage = (currentImage) => {
+        const filtered = gallery.filter((image) => image != currentImage);
+        setGallery(filtered)
+    }
+    const RemoveAward = (currentAward) => {
+        const filtered = awards.filter((award) => award.type != currentAward.type && award.date != currentAward.date);
+        setAwards(filtered)
+    }
+
+    const RemoveManagerAward = (currentAward) => {
+        const filtered = managerAwards.filter((award) => award.type != currentAward.type && award.date != currentAward.date);
+        setManagerAwards(filtered)
+    }
+    const AddAward = () => {
+        let award = {
+            date: awardDate,
+            points: awardPoints,
+            type: awardType
+        }
+        awards.push(award)
+    }
+
+    const ManagerAward = () => {
+        let mAward = {
+            date: managerAwardDate,
+            points: managerAwardPoints,
+            type: managerAwardType
+        }
+        managerAwards.push(mAward)
+    }
 
     return (
 
@@ -311,7 +374,7 @@ const CreateFranchise = () => {
                 >
                     <View>
                         <LinearGradient colors={[Colors.lg2, Colors.lg1]}>
-                            <Text style={styles.headingText}>Basic info *</Text>
+                            <Text style={styles.headingText}>Edit Basic info *</Text>
                             <View style={styles.inPutView}>
                                 <TextInput
                                     value={branchCode}
@@ -335,7 +398,7 @@ const CreateFranchise = () => {
                                     placeholder='Number of Employee'
                                     placeholderTextColor={Colors.grey20}
                                     onChangeText={setEmployees}
-                                    style={{ ...InputText, maxWidth: 150 }}
+                                    style={{ ...InputText, maxWidth: 155 }}
                                     keyboardType="number-pad"
                                 />
                                 <SelectDropdown
@@ -352,20 +415,13 @@ const CreateFranchise = () => {
                             <View style={{ flexDirection: 'row', margin: '2%', justifyContent: "space-between", alignItems: 'center' }}>
                                 <TextInput
                                     value={openingData}
-                                    placeholder='Opening Date'
+                                    placeholder='Branch Opening Data'
                                     placeholderTextColor={Colors.grey20}
                                     onChangeText={setOpeningData}
-                                    style={{ ...InputText, maxWidth: 180 }}
+                                    style={{ ...InputText, maxWidth: 150 }}
                                     keyboardType="number-pad"
                                 />
-                                {/* <TouchableOpacity>
-                                    <DatePicker
-                                        date={openingData}
-                                        onDateChange={setOpeningData}
-                                    />
-                                </TouchableOpacity> */}
                                 <View>
-                                    {/* <Text>Upload Image</Text> */}
                                     {!franchiseImage ?
                                         <TouchableOpacity
                                             onPress={() => selectImage()}
@@ -373,7 +429,7 @@ const CreateFranchise = () => {
                                             <Text>Click</Text>
                                         </TouchableOpacity>
                                         :
-                                        <View style={styles.imageView}>
+                                        <TouchableOpacity style={styles.imageView} onPress={() => selectImage()}>
                                             <Image source={{
                                                 uri: franchiseImage
                                             }}
@@ -382,7 +438,7 @@ const CreateFranchise = () => {
                                                     width: 70,
                                                     borderRadius: 100
                                                 }} />
-                                        </View>
+                                        </TouchableOpacity>
                                     }
                                 </View>
                             </View>
@@ -390,7 +446,7 @@ const CreateFranchise = () => {
                     </View>
                     <View style={{ backgroundColor: 'red', paddingBottom: 0, marginBottom: 0 }}>
                         <LinearGradient colors={[Colors.lg2, Colors.lg1]}>
-                            <Text style={styles.headingText}>Address *</Text>
+                            <Text style={styles.headingText}>Edit Address *</Text>
                             <TextInput
                                 value={street}
                                 placeholder='Branch street Address'
@@ -416,22 +472,22 @@ const CreateFranchise = () => {
                                 />
                             </View>
                             <TouchableOpacity onPress={() => { setAddLocation(true) }}>
-                                <Text style={styles.addManager}>Add Location</Text>
+                                <Text style={styles.addManager}>Edit Location</Text>
                             </TouchableOpacity>
                             {addLocation ?
                                 <View style={{ maxHeight: 300, maxWidth: "100%", }}>
                                     <View style={styles.inPutView}>
                                         <View style={{ flexDirection: 'row', justifyContent: "flex-start", alignItems: "center" }}>
                                             <Text>Lati:</Text>
-                                            <Text style={{ ...InputText, paddingHorizontal: 3 }}>{latitude}</Text>
+                                            <Text style={{ ...InputText, paddingHorizontal: 0 }}>{latitude}</Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', justifyContent: "flex-start", alignItems: "center" }}>
                                             <Text>Long:</Text>
-                                            <Text style={{ ...InputText, paddingHorizontal: 3 }}>{longitude}</Text>
+                                            <Text style={{ ...InputText, paddingHorizontal: 0 }}>{longitude}</Text>
                                         </View>
                                     </View>
                                     <TouchableOpacity style={{ alignSelf: 'center', margin: "2%" }} onPress={() => AddLocation()}>
-                                        <Text style={styles.addManager}>Add Location</Text>
+                                        <Text style={styles.addManager}>Edit Location</Text>
                                     </TouchableOpacity>
                                     <MapView
                                         ref={refMap}
@@ -494,133 +550,186 @@ const CreateFranchise = () => {
                             />
                         </LinearGradient>
                     </View>
-
-                    {!addManager ?
-                        <TouchableOpacity onPress={() => {
-                            setAddManager(true)
-                        }}>
-                            <Text style={styles.addManager}>Add Manager</Text>
-                        </TouchableOpacity>
-                        :
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Text style={styles.addManager}>Add Manager </Text>
-                            <TouchableOpacity onPress={() => {
-                                CancelManager()
-                                setAddManager(false)
-                            }}>
-                                <Text style={[styles.headingText, { fontWeight: 'bold' }]}>Cancel</Text>
-                            </TouchableOpacity>
-                        </View>
-                    }
-
-                    {addManager ?
-                        <View>
-                            <LinearGradient colors={[Colors.lg2, Colors.lg1]}>
-                                <View style={{ flexDirection: 'row', margin: '2%', justifyContent: "space-between", alignItems: 'center' }}>
-                                    <TextInput
-                                        value={managerName}
-                                        placeholder='Branch Manager Name'
-                                        placeholderTextColor={Colors.grey20}
-                                        onChangeText={setManagerName}
-                                        style={{ ...InputText, maxWidth: 190 }}
-                                    />
-                                    <View>
-                                        {/* <Text>Upload Image</Text> */}
-                                        {!managerImage ?
-                                            <TouchableOpacity
-                                                onPress={() => selectManagerImage()}
-                                                style={styles.imageView}>
-                                                <Text>Click</Text>
-                                            </TouchableOpacity>
-                                            :
-                                            <View style={styles.imageView}>
-                                                <Image source={{
-                                                    uri: managerImage
-                                                }}
-                                                    style={{
-                                                        height: 70,
-                                                        width: 70,
-                                                        borderRadius: 100
-                                                    }} />
-                                            </View>
-                                        }
-                                    </View>
-                                </View>
-                                <TextInput
-                                    value={managerEmail}
-                                    placeholder='Branch Manager Email Address'
-                                    placeholderTextColor={Colors.grey20}
-                                    onChangeText={setManagerEmail}
-                                    style={{ ...InputText }}
-                                />
-                                <TextInput
-                                    value={managerAddress}
-                                    placeholder='Branch Manager Current Address'
-                                    placeholderTextColor={Colors.grey20}
-                                    onChangeText={setManagerAddress}
-                                    style={{ ...InputText }}
-                                />
-                                <TextInput
-                                    value={managerPermanentAddress}
-                                    placeholder='Branch Manager Permanent Address'
-                                    placeholderTextColor={Colors.grey20}
-                                    onChangeText={setManagerPermanentAddress}
-                                    style={{ ...InputText }}
-                                />
-                                <View style={styles.inPutView}>
-                                    <TextInput
-                                        value={dob}
-                                        placeholder='Branch Manager DOB'
-                                        placeholderTextColor={Colors.grey20}
-                                        onChangeText={setDOB}
-                                        style={{ ...InputText, maxWidth: 180 }}
-                                    />
-                                    <TextInput
-                                        value={domicile}
-                                        placeholder='Branch Manager Domicile'
-                                        placeholderTextColor={Colors.grey20}
-                                        onChangeText={setDomicile}
-                                        style={{ ...InputText, maxWidth: 190 }}
-                                    />
-                                </View>
-                                <TextInput
-                                    value={managerJoiningDate}
-                                    placeholder='Branch Manager Joining Date'
-                                    placeholderTextColor={Colors.grey20}
-                                    onChangeText={setManagerJoiningDate}
-                                    style={{ ...InputText }}
-                                />
-                            </LinearGradient>
-                        </View>
-                        :
-                        <></>
-                    }
                     <View>
                         <LinearGradient colors={[Colors.lg2, Colors.lg1]}>
-                            <Text style={styles.headingText}>Working Hours *</Text>
+                            <Text style={styles.headingText}>Edit Manager</Text>
+                            <View style={{ flexDirection: 'row', margin: '2%', justifyContent: "space-between", alignItems: 'center' }}>
+                                <TextInput
+                                    value={managerName}
+                                    placeholder='Branch Manager Name'
+                                    placeholderTextColor={Colors.grey20}
+                                    onChangeText={setManagerName}
+                                    style={{ ...InputText, maxWidth: 150 }}
+                                />
+                                <View>
+                                    {!managerImage ?
+                                        <TouchableOpacity
+                                            onPress={() => selectManagerImage()}
+                                            style={styles.imageView}>
+                                            <Text>Click</Text>
+                                        </TouchableOpacity>
+                                        :
+                                        <TouchableOpacity style={styles.imageView} onPress={() => selectManagerImage()}>
+                                            <Image source={{
+                                                uri: managerImage
+                                            }}
+                                                style={{
+                                                    height: 70,
+                                                    width: 70,
+                                                    borderRadius: 100
+                                                }} />
+                                        </TouchableOpacity>
+                                    }
+                                </View>
+                            </View>
+                            <TextInput
+                                value={managerEmail}
+                                placeholder='Branch Manager Email Address'
+                                placeholderTextColor={Colors.grey20}
+                                onChangeText={setManagerEmail}
+                                style={{ ...InputText }}
+                            />
+                            <TextInput
+                                value={managerAddress}
+                                placeholder='Branch Manager Current Address'
+                                placeholderTextColor={Colors.grey20}
+                                onChangeText={setManagerAddress}
+                                style={{ ...InputText }}
+                            />
+                            <TextInput
+                                value={managerPermanentAddress}
+                                placeholder='Branch Manager Permanent Address'
+                                placeholderTextColor={Colors.grey20}
+                                onChangeText={setManagerPermanentAddress}
+                                style={{ ...InputText }}
+                            />
+                            <View style={styles.inPutView}>
+                                <TextInput
+                                    value={dob}
+                                    placeholder='Branch Manager DOB'
+                                    placeholderTextColor={Colors.grey20}
+                                    onChangeText={setDOB}
+                                    style={{ ...InputText, maxWidth: 150 }}
+                                />
+                                <TextInput
+                                    value={domicile}
+                                    placeholder='Branch Manager Domicile'
+                                    placeholderTextColor={Colors.grey20}
+                                    onChangeText={setDomicile}
+                                    style={{ ...InputText, maxWidth: 150 }}
+                                />
+                            </View>
+                            <TextInput
+                                value={managerJoiningDate}
+                                placeholder='Branch Manager Joining Date'
+                                placeholderTextColor={Colors.grey20}
+                                onChangeText={setManagerJoiningDate}
+                                style={{ ...InputText }}
+                            />
+                            <Text style={styles.headingText}>Edit Awards</Text>
+                            <View style={styles.afterImageContent}>
+                                {managerAwards.map((item) => (
+                                    item.type === "gold" || item.type === "Gold" ?
+                                        <View style={[styles.contactRows, { alignItems: "center" }]}>
+                                            <Text style={{ ...Typography.small }}>Gold</Text>
+                                            <Text style={{ ...Typography.small }}>{item?.date}</Text>
+                                            <View>
+                                                <FontAwesome name='trophy' size={24} color={"#FDCC0D"} />
+                                                <Text style={{ ...Typography.small }}>{item?.points}</Text>
+                                            </View>
+                                            <AntDesign name='close' size={18}
+                                                onPress={() => RemoveManagerAward(item)}
+                                            />
+                                        </View>
+                                        :
+                                        <View style={[styles.contactRows, { alignItems: "center" }]}>
+                                            <Text style={{ ...Typography.small }}>Silver</Text>
+                                            <Text style={{ ...Typography.small }}>{item?.date}</Text>
+                                            <View>
+                                                <FontAwesome name='trophy' size={24} color={"#C0C0C0"} />
+                                                <Text style={{ ...Typography.small }}>{item?.points}</Text>
+                                            </View>
+                                            <AntDesign name='close' size={18}
+                                                onPress={() => RemoveManagerAward(item)}
+                                            />
+                                        </View>
+                                ))}
+                                <TouchableOpacity onPress={() => {
+                                    setAddManagerAward(true)
+                                }}>
+                                    <Text style={[styles.addManager, { marginVertical: '2%' }]}>Add Award</Text>
+                                </TouchableOpacity>
+                            </View>
+                            {addManagerAward ?
+                                <>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <TextInput
+                                            value={managerAwardType}
+                                            placeholder='type'
+                                            placeholderTextColor={Colors.grey20}
+                                            onChangeText={setManagerAwardType}
+                                            style={{ ...InputText, minWidth: 110, maxWidth: 110 }}
+                                        />
+                                        <TextInput
+                                            value={managerAwardDate}
+                                            placeholder='Date'
+                                            placeholderTextColor={Colors.grey20}
+                                            onChangeText={setManagerAwardDate}
+                                            style={{ ...InputText, minWidth: 110, maxWidth: 110 }}
+                                        />
+                                        <TextInput
+                                            value={managerAwardPoints}
+                                            placeholder='Points'
+                                            placeholderTextColor={Colors.grey20}
+                                            onChangeText={setManagerAwardPointes}
+                                            style={{ ...InputText, minWidth: 110, maxWidth: 110 }}
+                                        />
+                                    </View>
+                                    <View>
+                                        <TouchableOpacity style={
+                                            {
+                                                marginVertical: '2%',
+                                                justifyContent: 'center',
+                                                alignSelf: 'center'
+                                            }
+                                        }
+                                            onPress={() => ManagerAward()}
+                                        >
+                                            <Text style={{ alignSelf: 'center', color: "#fff" }}>Add Award</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </>
+                                :
+                                <></>
+                            }
+                        </LinearGradient>
+                    </View>
+                    <View>
+                        <LinearGradient colors={[Colors.lg2, Colors.lg1]}>
+                            <Text style={styles.headingText}>Edit Working Hours *</Text>
                             <View style={styles.inPutView}>
                                 <TextInput
                                     value={opening}
                                     placeholder='Branch Opening Time'
                                     placeholderTextColor={Colors.grey20}
                                     onChangeText={setOpening}
-                                    style={{ ...InputText, maxWidth: 160 }}
+                                    style={{ ...InputText, maxWidth: 150 }}
                                 />
                                 <TextInput
                                     value={closing}
                                     placeholder='Branch Closing Time'
                                     placeholderTextColor={Colors.grey20}
                                     onChangeText={setClosing}
-                                    style={{ ...InputText, maxWidth: 160 }}
+                                    style={{ ...InputText, maxWidth: 150 }}
                                 />
                             </View>
                             <View style={styles.inPutView}>
                                 <TextInput
                                     value={breakTime}
-                                    placeholder='Branch Break Time'
+                                    placeholder='Branch Break Time Time'
                                     placeholderTextColor={Colors.grey20}
                                     onChangeText={setBreakTime}
-                                    style={{ ...InputText, maxWidth: 160 }}
+                                    style={{ ...InputText, maxWidth: 150 }}
                                 />
                                 <TextInput
                                     value={holiday}
@@ -635,10 +744,107 @@ const CreateFranchise = () => {
                     <View>
                         <Text style={styles.headingText}>Add Gallery Images</Text>
                         <View>
+                            <View style={{ marginHorizontal: "2%" }}>
+                                <FlatList
+                                    horizontal
+                                    data={gallery}
+                                    renderItem={(item1) => {
+                                        return (
+                                            <View style={{ paddingHorizontal: '2%' }}>
+                                                <Image source={{ uri: item1.item }} style={{ width: 70, height: 70, borderRadius: 7, }} />
+                                                <AntDesign name='close' size={18} style={styles.galleryCloseIcon}
+                                                    onPress={() => RemoveGalleryImage(item1.item)}
+                                                />
+                                            </View>
+                                        )
+                                    }}
+                                />
+                            </View>
                             <TouchableOpacity onPress={() => GalleryImages()}>
-                                <Text style={[styles.addManager, { marginTop: 0 }]}>Upload Image</Text>
+                                <Text style={[styles.addManager, { marginVertical: '2%' }]}>Upload Image</Text>
                             </TouchableOpacity>
                         </View>
+                    </View>
+                    <View>
+                        <LinearGradient colors={[Colors.lg2, Colors.lg1]}>
+
+                            <View style={styles.afterImageContent}>
+                                {awards?.map((item) => (
+                                    item.type === "gold" || item.type === "Gold" ?
+                                        <View style={[styles.contactRows, { alignItems: "center" }]}>
+                                            <Text style={{ ...Typography.small }}>Gold</Text>
+                                            <Text style={{ ...Typography.small }}>{item?.date}</Text>
+                                            <View>
+                                                <FontAwesome name='trophy' size={24} color={"#FDCC0D"} />
+                                                <Text style={{ ...Typography.small }}>{item?.points}</Text>
+                                            </View>
+                                            <AntDesign name='close' size={18}
+                                                onPress={() => RemoveAward(item)}
+                                            />
+                                        </View>
+                                        :
+                                        <View style={[styles.contactRows, { alignItems: "center" }]}>
+                                            <Text style={{ ...Typography.small }}>Silver</Text>
+                                            <Text style={{ ...Typography.small }}>{item?.date}</Text>
+                                            <View>
+                                                <FontAwesome name='trophy' size={24} color={"#C0C0C0"} />
+                                                <Text style={{ ...Typography.small }}>{item?.points}</Text>
+                                            </View>
+                                            <AntDesign name='close' size={18}
+                                                onPress={() => RemoveAward(item)}
+                                            />
+                                        </View>
+                                ))}
+                                <TouchableOpacity onPress={() => {
+                                    setAddAward(true)
+                                }}>
+                                    <Text style={[styles.addManager, { marginVertical: '2%' }]}>Add Award</Text>
+                                </TouchableOpacity>
+                            </View>
+                            {addAward ?
+                                <>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <TextInput
+                                            value={awardType}
+                                            placeholder='type'
+                                            placeholderTextColor={Colors.grey20}
+                                            onChangeText={setAwardType}
+                                            style={{ ...InputText, minWidth: 110, maxWidth: 110 }}
+                                        />
+                                        <TextInput
+                                            value={awardDate}
+                                            placeholder='Date'
+                                            placeholderTextColor={Colors.grey20}
+                                            onChangeText={setAwardDate}
+                                            style={{ ...InputText, minWidth: 110, maxWidth: 110 }}
+                                        />
+                                        <TextInput
+                                            value={awardPoints}
+                                            placeholder='Points'
+                                            placeholderTextColor={Colors.grey20}
+                                            onChangeText={setAwardPointes}
+                                            style={{ ...InputText, minWidth: 110, maxWidth: 110 }}
+                                        />
+                                    </View>
+                                    <View>
+                                        <TouchableOpacity style={
+                                            {
+                                                marginVertical: '2%',
+                                                justifyContent: 'center',
+                                                alignSelf: 'center'
+                                            }
+                                        }
+                                            onPress={() => AddAward()}
+                                        >
+                                            <Text style={{ alignSelf: 'center', color: "#fff" }}>Add Award</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </>
+                                :
+                                <></>
+                            }
+
+                        </LinearGradient>
                     </View>
                     <TouchableOpacity style={{
                         alignSelf: 'center',
@@ -649,10 +855,9 @@ const CreateFranchise = () => {
                         borderColor: Colors.orange10,
                         marginTop: '4%'
                     }} onPress={() => {
-                        createFranchise()
-                    }
-                    }>
-                        <Text style={[styles.addManager, { marginTop: 0, paddingHorizontal: '4%', paddingVertical: '2%' }]}>Create Franchise</Text>
+                        updateFranchise()
+                    }}>
+                        <Text style={[styles.addManager, { marginTop: 0, paddingHorizontal: '4%', paddingVertical: '2%' }]}>Update Franchise</Text>
                     </TouchableOpacity>
                 </ScrollView>
             </LinearGradient>
@@ -661,7 +866,7 @@ const CreateFranchise = () => {
     )
 }
 
-export default CreateFranchise
+export default UpdateFranchise
 
 const styles = StyleSheet.create({
     mainContainer: {
@@ -677,8 +882,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         backgroundColor: 'transparent',
         borderWidth: 1,
-        marginLeft: '2%',
-
+        marginLeft: '2%'
     },
     headingText: {
         paddingHorizontal: '2%',
@@ -706,5 +910,24 @@ const styles = StyleSheet.create({
     map: {
         width: '100%',
         height: '100%',
+    },
+    galleryCloseIcon: {
+        position: 'absolute',
+        right: 1,
+        top: 1
+    },
+    afterImageContent: {
+        marginTop: '1%',
+        marginHorizontal: '2%',
+        justifyContent: 'center',
+        marginBottom: '2%',
+        borderRadius: 7,
+        padding: '2%'
+
+    },
+    contactRows: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        marginTop: '1%'
     },
 })
