@@ -1,23 +1,29 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView, Alert } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { Colors, Container, InputText } from '../components/styles/style-sheet';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useDispatch } from 'react-redux';
 import actionTypes from '../redux/action-types';
-import { useSelector } from 'react-redux';
-import { addingNews } from "../redux/actions/news-action"
-import NewsCard from '../components/news-card';
+import { addingNews } from '../redux/actions/news-action';
+import { useNavigation } from '@react-navigation/native';
 
-const AddNews = () => {
+const EditNews = ({ route }) => {
+    const { item } = route.params;
     const dispatch = useDispatch();
-    const allNews = useSelector(state => state.news.news)
+    const navigation = useNavigation();
+    const [id, setId] = useState("")
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [link, setLink] = useState("");
     const [image, setImage] = useState("");
-    console.log('====================================');
-    console.log(allNews);
-    console.log('====================================');
+
+    useEffect(() => {
+        setId(item.id)
+        setTitle(item.title)
+        setDescription(item.description)
+        setLink(item.link)
+        setImage(item.image)
+    }, [item])
     const selectImage = () => {
         launchImageLibrary(
             {
@@ -55,25 +61,20 @@ const AddNews = () => {
         }
         else {
             let obj = {
-                id: Math.random(),
+                id: id,
                 title: title,
                 description: description,
                 link: link,
                 image: image
             }
-            dispatch(addingNews(obj, actionTypes.ADD_NEWS))
-            setTitle("")
-            setDescription("")
-            setLink("")
-            setImage("")
+            dispatch(addingNews(obj, actionTypes.EDIT_NEWS))
         }
 
     }
-
     return (
         <SafeAreaView style={styles.mainContainer}>
             <View style={styles.topView}>
-                <Text style={{ fontSize: 30 }}>News</Text>
+                <Text style={{ fontSize: 30 }}>Edit News</Text>
             </View>
             <View style={styles.container}>
                 <Text style={{ fontSize: 20 }}>Title :</Text>
@@ -123,20 +124,19 @@ const AddNews = () => {
                     </TouchableOpacity>
                 }
             </View>
-            <TouchableOpacity style={styles.buttonText} onPress={() => submitNews()}>
-                <Text>Add News</Text>
+            <TouchableOpacity
+                style={styles.buttonText}
+                onPress={() => {
+                    submitNews()
+                    navigation.goBack()
+                }}>
+                <Text> Save Change</Text>
             </TouchableOpacity>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                {allNews.map((item) => <View style={{ padding: '2%' }}>
-                    <NewsCard item={item} />
-                </View>
-                )}
-            </ScrollView>
         </SafeAreaView>
     )
 }
 
-export default AddNews
+export default EditNews
 
 const styles = StyleSheet.create({
     mainContainer: { ...Container.mainContainer },
@@ -172,5 +172,4 @@ const styles = StyleSheet.create({
         paddingVertical: '2%',
         borderRadius: 8
     },
-
 })

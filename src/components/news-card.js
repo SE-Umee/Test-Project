@@ -2,8 +2,11 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Linking } from 'react-
 import React from 'react'
 import { Colors, Container, Typography } from './styles/style-sheet';
 import LinearGradient from 'react-native-linear-gradient';
+import Feather from 'react-native-vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native';
 
 const NewsCard = ({ item }) => {
+    const navigation = useNavigation();
     handleClick = (url) => {
         Linking.canOpenURL(url).then(supported => {
             if (supported) {
@@ -26,6 +29,13 @@ const NewsCard = ({ item }) => {
                     </View>
                     <View style={styles.rightView}>
                         <Image source={{ uri: item.image }} style={styles.image} />
+                        <Feather
+                            name='edit-2'
+                            size={20}
+                            color={Colors.grey50}
+                            onPress={() => navigation.navigate("EditNews", { item })}
+                            style={{ position: 'absolute', right: 5, top: 3 }}
+                        />
                     </View>
                 </View>
             </LinearGradient>
