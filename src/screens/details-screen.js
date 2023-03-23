@@ -52,9 +52,7 @@ const DetailsScreen = ({ route }) => {
                         <TouchableOpacity onPress={() => navigation.goBack()}>
                             <Ionicons name='arrow-back' size={24} onPress={() => navigation.goBack()} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingRight: 15, marginTop: 10 }}>
-                            <Feather name='edit-2' size={24} onPress={() => navigation.navigate("Edit", { currentItem: item })} />
-                        </TouchableOpacity>
+                        <Feather name='edit-2' size={24} onPress={() => navigation.navigate("Edit", { currentItem: item })} style={{ paddingRight: 15, marginTop: 10 }} />
                     </View>
                 </View>
                 <LinearGradient colors={[Colors.lg2, Colors.lg1]} style={styles.afterImageContent}>

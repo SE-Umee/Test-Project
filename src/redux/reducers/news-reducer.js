@@ -11,6 +11,17 @@ export const newsReducer = (state = initialState, action) => {
                 ...state,
                 news: [...state.news, action.data]
             };
+        case actionTypes.EDIT_NEWS:
+            console.log('====================================');
+            console.log(",,,,,,,", action.data);
+            console.log('====================================');
+            let index = state.news.findIndex(news => news.id === action.data.id);
+            let cloneNews = [...state.news];
+            cloneNews[index] = action.data;
+            return {
+                ...state,
+                news: cloneNews
+            }
         default: {
             return state
         }
