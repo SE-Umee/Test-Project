@@ -24,6 +24,9 @@ import MapView, { Marker } from 'react-native-maps'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import CalendarPicker from 'react-native-calendar-picker';
+import moment from 'moment'
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const UpdateFranchise = ({ route }) => {
     const { currentItem } = route.params;
@@ -66,6 +69,7 @@ const UpdateFranchise = ({ route }) => {
     const [managerJoiningDate, setManagerJoiningDate] = useState("");
     const [addLocation, setAddLocation] = useState(false);
     const [addAward, setAddAward] = useState(false);
+    const [dateOpen, setDateOpen] = useState(false)
     const [awardType, setAwardType] = useState('');
     const [awardDate, setAwardDate] = useState("");
     const [awardPoints, setAwardPointes] = useState("");
@@ -342,6 +346,11 @@ const UpdateFranchise = ({ route }) => {
         setAwards(filtered)
     }
 
+    const handleDateChange = (date) => {
+        const inputString = moment(date).format('DD/MM/YYY');
+        setOpeningData(inputString);
+    };
+
     const RemoveManagerAward = (currentAward) => {
         const filtered = managerAwards.filter((award) => award.type != currentAward.type && award.date != currentAward.date);
         setManagerAwards(filtered)
@@ -353,6 +362,9 @@ const UpdateFranchise = ({ route }) => {
             type: awardType
         }
         awards.push(award)
+        setAwardDate("")
+        setAwardPointes("")
+        setAwardType("")
     }
 
     const ManagerAward = () => {
@@ -362,6 +374,10 @@ const UpdateFranchise = ({ route }) => {
             type: managerAwardType
         }
         managerAwards.push(mAward)
+
+        setManagerAwardDate("")
+        setManagerAwardPointes("")
+        setManagerAwardType("")
     }
 
     return (
@@ -374,7 +390,7 @@ const UpdateFranchise = ({ route }) => {
                 >
                     <View>
                         <LinearGradient colors={[Colors.lg2, Colors.lg1]}>
-                            <Text style={styles.headingText}>Edit Basic info *</Text>
+                            <Text style={[styles.headingText, { paddingTop: "8%" }]}>Edit Basic info *</Text>
                             <View style={styles.inPutView}>
                                 <TextInput
                                     value={branchCode}
@@ -391,6 +407,7 @@ const UpdateFranchise = ({ route }) => {
                                     onChangeText={setCategory}
                                     style={{ ...InputText, maxWidth: 150 }}
                                 />
+
                             </View>
                             <View style={styles.inPutView}>
                                 <TextInput
@@ -413,14 +430,35 @@ const UpdateFranchise = ({ route }) => {
                                 />
                             </View>
                             <View style={{ flexDirection: 'row', margin: '2%', justifyContent: "space-between", alignItems: 'center' }}>
-                                <TextInput
-                                    value={openingData}
-                                    placeholder='Branch Opening Data'
-                                    placeholderTextColor={Colors.grey20}
-                                    onChangeText={setOpeningData}
-                                    style={{ ...InputText, maxWidth: 150 }}
-                                    keyboardType="number-pad"
-                                />
+                                {dateOpen === false ?
+                                    <TouchableOpacity onPress={() => setDateOpen(true)} style={{ ...InputText, maxWidth: 155 }}>
+                                        {openingData != "" ?
+                                            <Text>
+                                                {openingData}
+                                            </Text>
+                                            :
+                                            <Text style={styles.addManager}>
+                                                Opening Date
+                                            </Text>
+                                        }
+                                    </TouchableOpacity>
+                                    : <></>
+                                }
+                                {dateOpen === true ?
+                                    <View>
+                                        <CalendarPicker
+                                            selectedStartDate={openingData}
+                                            onDateChange={handleDateChange}
+                                        />
+                                        <TouchableOpacity onPress={() => setDateOpen(false)}>
+                                            <Text style={styles.addManager}>
+                                                Add Date
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    :
+                                    <></>
+                                }
                                 <View>
                                     {!franchiseImage ?
                                         <TouchableOpacity
@@ -442,6 +480,9 @@ const UpdateFranchise = ({ route }) => {
                                     }
                                 </View>
                             </View>
+                            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headingIconsView}>
+                                <Ionicons name='arrow-back' size={24} onPress={() => navigation.goBack()} />
+                            </TouchableOpacity>
                         </LinearGradient>
                     </View>
                     <View style={{ backgroundColor: 'red', paddingBottom: 0, marginBottom: 0 }}>
@@ -476,18 +517,8 @@ const UpdateFranchise = ({ route }) => {
                             </TouchableOpacity>
                             {addLocation ?
                                 <View style={{ maxHeight: 300, maxWidth: "100%", }}>
-                                    <View style={styles.inPutView}>
-                                        <View style={{ flexDirection: 'row', justifyContent: "flex-start", alignItems: "center" }}>
-                                            <Text>Lati:</Text>
-                                            <Text style={{ ...InputText, paddingHorizontal: 0 }}>{latitude}</Text>
-                                        </View>
-                                        <View style={{ flexDirection: 'row', justifyContent: "flex-start", alignItems: "center" }}>
-                                            <Text>Long:</Text>
-                                            <Text style={{ ...InputText, paddingHorizontal: 0 }}>{longitude}</Text>
-                                        </View>
-                                    </View>
                                     <TouchableOpacity style={{ alignSelf: 'center', margin: "2%" }} onPress={() => AddLocation()}>
-                                        <Text style={styles.addManager}>Edit Location</Text>
+                                        <Text style={styles.addManager}>Change Location</Text>
                                     </TouchableOpacity>
                                     <MapView
                                         ref={refMap}
@@ -886,7 +917,7 @@ const styles = StyleSheet.create({
     },
     headingText: {
         paddingHorizontal: '2%',
-        marginTop: '2%'
+        paddingVertical: '2%'
     },
     addManager: {
         color: Colors.white,
@@ -929,5 +960,13 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: 'space-between',
         marginTop: '1%'
+    },
+    headingIconsView: {
+        position: 'absolute',
+        top: 0,
+        left: 10,
+        flexDirection: 'row',
+        justifyContent: "space-between",
+        width: '100%'
     },
 })

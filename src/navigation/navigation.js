@@ -31,6 +31,7 @@ const adminScreen = () => {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name='Admin' component={AdminScreen} />
             <Stack.Screen name='CreateFranchise' component={CreateFranchise} />
+            <Stack.Screen name="News" component={AddNews} />
         </Stack.Navigator>
     )
 }

@@ -12,9 +12,12 @@ const AdminScreen = () => {
                 <View style={{ flex: 0.5, justifyContent: 'center' }}>
                     <Text style={styles.text}>infinity</Text>
                 </View>
-                <View>
+                <View style={{ flex: 0.5 }}>
                     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CreateFranchise')}>
                         <Text style={{ color: Colors.white, fontWeight: "bold" }}>Create Franchise</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('News')}>
+                        <Text style={{ color: Colors.white, fontWeight: "bold" }}>Add News</Text>
                     </TouchableOpacity>
                 </View>
             </LinearGradient>
