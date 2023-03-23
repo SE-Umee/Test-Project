@@ -22,6 +22,8 @@ import { franchise } from '../redux/actions/franchise-action'
 import MapView, { Marker } from 'react-native-maps'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
+import CalendarPicker from 'react-native-calendar-picker';
+import moment from 'moment'
 
 
 const CreateFranchise = () => {
@@ -300,7 +302,10 @@ const CreateFranchise = () => {
         }
     }
 
-
+    const handleDateChange = (date) => {
+        const inputString = moment(date).format('DD/MM/YYY');
+        setOpeningData(inputString);
+    };
     return (
 
         <SafeAreaView style={styles.mainContainer}>
@@ -350,20 +355,35 @@ const CreateFranchise = () => {
                                 />
                             </View>
                             <View style={{ flexDirection: 'row', margin: '2%', justifyContent: "space-between", alignItems: 'center' }}>
-                                <TextInput
-                                    value={openingData}
-                                    placeholder='Opening Date'
-                                    placeholderTextColor={Colors.grey20}
-                                    onChangeText={setOpeningData}
-                                    style={{ ...InputText, maxWidth: 180 }}
-                                    keyboardType="number-pad"
-                                />
-                                {/* <TouchableOpacity>
-                                    <DatePicker
-                                        date={openingData}
-                                        onDateChange={setOpeningData}
-                                    />
-                                </TouchableOpacity> */}
+                                {dateOpen === false ?
+                                    <TouchableOpacity onPress={() => setDateOpen(true)} style={{ ...InputText, maxWidth: 155 }}>
+                                        {openingData != "" ?
+                                            <Text>
+                                                {openingData}
+                                            </Text>
+                                            :
+                                            <Text style={styles.addManager}>
+                                                Opening Date
+                                            </Text>
+                                        }
+                                    </TouchableOpacity>
+                                    : <></>
+                                }
+                                {dateOpen === true ?
+                                    <View>
+                                        <CalendarPicker
+                                            selectedStartDate={openingData}
+                                            onDateChange={handleDateChange}
+                                        />
+                                        <TouchableOpacity onPress={() => setDateOpen(false)}>
+                                            <Text style={styles.addManager}>
+                                                Add Date
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    :
+                                    <></>
+                                }
                                 <View>
                                     {/* <Text>Upload Image</Text> */}
                                     {!franchiseImage ?

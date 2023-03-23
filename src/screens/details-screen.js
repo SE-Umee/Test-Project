@@ -48,7 +48,7 @@ const DetailsScreen = ({ route }) => {
                             starSize={20}
                         />
                     </View>
-                    <View style={{ position: 'absolute', top: 30, left: 10, flexDirection: 'row', justifyContent: "space-between", width: '100%' }}>
+                    <View style={styles.headingIconsView}>
                         <TouchableOpacity onPress={() => navigation.goBack()}>
                             <Ionicons name='arrow-back' size={24} onPress={() => navigation.goBack()} />
                         </TouchableOpacity>
@@ -243,5 +243,13 @@ const styles = StyleSheet.create({
         borderRadius: 7,
         marginTop: "2%",
         backgroundColor: 'red'
+    },
+    headingIconsView: {
+        position: 'absolute',
+        top: 30,
+        left: 10,
+        flexDirection: 'row',
+        justifyContent: "space-between",
+        width: '100%'
     },
 })
