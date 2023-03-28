@@ -10,12 +10,12 @@ import {
     Dimensions,
     Alert
 } from 'react-native'
-import React, { useState, useCallback, useRef, useEffect } from 'react'
-import { Colors, Container, InputText, Typography } from '../components/styles/style-sheet'
+import React, { useState, useRef, useEffect } from 'react'
+import { Colors, InputText, Typography } from '../components/styles/style-sheet'
 import LinearGradient from 'react-native-linear-gradient'
 import SelectDropdown from 'react-native-select-dropdown'
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { launchImageLibrary, openPicker } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { useDispatch } from 'react-redux'
 import actionTypes from '../redux/action-types'
 import { franchise } from '../redux/actions/franchise-action'
@@ -303,7 +303,7 @@ const CreateFranchise = () => {
     }
 
     const handleDateChange = (date) => {
-        const inputString = moment(date).format('DD/MM/YYY');
+        const inputString = moment(date).format('DD/MM/YYYY');
         setOpeningData(inputString);
     };
     return (

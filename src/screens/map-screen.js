@@ -13,11 +13,14 @@ import { useSelector } from 'react-redux';
 const MapScreen = ({ route }) => {
     const allFranchises = useSelector(state => state.franchise.franchises);
     const { item } = route.params;
+    console.log('====================================');
+    console.log(item.map_address.latitude);
+    console.log('====================================');
     const navigation = useNavigation();
-    const [cLatitude, setCLatitude] = useState();
-    const [cLongitude, setCLongitude] = useState();
-    const [region, setRegion] = useState();
-    const [currentItem, setCurrentItem] = useState();
+    const [cLatitude, setCLatitude] = useState("");
+    const [cLongitude, setCLongitude] = useState("");
+    const [region, setRegion] = useState("");
+    const [currentItem, setCurrentItem] = useState("");
     const [currentMarker, setCurrentMarker] = useState(0);
     const window = Dimensions.get('window');
     const { width, height } = window
@@ -50,8 +53,8 @@ const MapScreen = ({ route }) => {
             latitudeDelta: 1,
             longitudeDelta: 1,
         });
-        setCLatitude(currentItem?.map_address.latitude)
-        setCLongitude(currentItem?.map_address.longitude)
+        setCLatitude(currentItem?.map_address?.latitude)
+        setCLongitude(currentItem?.map_address?.longitude)
     }
 
     useEffect(() => {

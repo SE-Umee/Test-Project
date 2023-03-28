@@ -97,14 +97,14 @@ const EditNews = ({ route }) => {
             <View style={styles.container}>
                 <Text style={{ fontSize: 20 }}>Link :</Text>
                 <TextInput
-                    placeholder='Link'
+                    placeholder='https://google.com'
                     value={link}
                     onChangeText={setLink}
                     style={styles.textInput}
                 />
             </View>
             <View style={styles.container}>
-                <Text style={{ fontSize: 20 }}>Image :  </Text>
+                <Text style={{ fontSize: 20 }}>Image :</Text>
                 {!image ?
                     <TouchableOpacity
                         onPress={() => selectImage()}

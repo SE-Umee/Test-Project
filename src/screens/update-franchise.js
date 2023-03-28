@@ -78,8 +78,6 @@ const UpdateFranchise = ({ route }) => {
     const [managerAwardDate, setManagerAwardDate] = useState("");
     const [managerAwardPoints, setManagerAwardPointes] = useState("");
     const relative = ["Punjab ", "KPK", "Sindh", "Balochistan", "Gilgit-Baltistan"];
-
-
     const refMap = useRef(null);
     const [region, setRegion] = useState();
     const [latitude, setLatitude] = useState('');
