@@ -65,9 +65,9 @@ const CreateFranchise = () => {
     const [addLocation, setAddLocation] = useState(false)
     const relative = ["Punjab ", "KPK", "Sindh", "Balochistan", "Gilgit-Baltistan"];
     const refMap = useRef(null);
-    const [region, setRegion] = useState('');
-    const [latitude, setLatitude] = useState('');
-    const [longitude, setLongitude] = useState('');
+    const [region, setRegion] = useState();
+    const [latitude, setLatitude] = useState();
+    const [longitude, setLongitude] = useState();
     const window = Dimensions.get('window');
     const { width, height } = window
     const LATITUDE_DELTA = 10;
@@ -229,57 +229,57 @@ const CreateFranchise = () => {
         if (branchCode === "") {
             Alert.alert("Branch Code can't be Empty")
         }
-        else if (category === "") {
-            Alert.alert("category can't be Empty")
-        }
-        else if (employees === "") {
-            Alert.alert("Number of Employ can't be Empty")
-        }
-        else if (province === "") {
-            Alert.alert("Province of the Franchise can't be Empty")
-        }
-        else if (openingData === "") {
-            Alert.alert("Opening Date can't be Empty")
-        }
-        else if (franchiseImage === "") {
-            Alert.alert("Franchise Image can't be Empty")
-        }
-        else if (street === "") {
-            Alert.alert("street Address can't be Empty")
-        }
-        else if (city === "") {
-            Alert.alert("City can't be Empty")
-        }
-        else if (zip === "") {
-            Alert.alert("Zip can't be Empty")
-        }
-        else if (latitude === "" && longitude === "") {
-            Alert.alert("Map Address can't be Empty")
-        }
-        else if (call === "") {
-            Alert.alert("Call number can't be Empty")
-        }
-        else if (phone === "") {
-            Alert.alert("Phone number can't be Empty")
-        }
-        else if (fax === "") {
-            Alert.alert("Fax number can't be Empty")
-        }
-        else if (email === "") {
-            Alert.alert("Email Address can't be Empty")
-        }
-        else if (opening === "") {
-            Alert.alert("Opening Time can't be Empty")
-        }
-        else if (closing === "") {
-            Alert.alert("Closing Time can't be Empty")
-        }
-        else if (breakTime === "") {
-            Alert.alert("Break Time can't be Empty")
-        }
-        else if (holiday === "") {
-            Alert.alert("Holiday can't be Empty")
-        }
+        // else if (category === "") {
+        //     Alert.alert("category can't be Empty")
+        // }
+        // else if (employees === "") {
+        //     Alert.alert("Number of Employ can't be Empty")
+        // }
+        // else if (province === "") {
+        //     Alert.alert("Province of the Franchise can't be Empty")
+        // }
+        // else if (openingData === "") {
+        //     Alert.alert("Opening Date can't be Empty")
+        // }
+        // else if (franchiseImage === "") {
+        //     Alert.alert("Franchise Image can't be Empty")
+        // }
+        // else if (street === "") {
+        //     Alert.alert("street Address can't be Empty")
+        // }
+        // else if (city === "") {
+        //     Alert.alert("City can't be Empty")
+        // }
+        // else if (zip === "") {
+        //     Alert.alert("Zip can't be Empty")
+        // }
+        // else if (latitude === "" && longitude === "") {
+        //     Alert.alert("Map Address can't be Empty")
+        // }
+        // else if (call === "") {
+        //     Alert.alert("Call number can't be Empty")
+        // }
+        // else if (phone === "") {
+        //     Alert.alert("Phone number can't be Empty")
+        // }
+        // else if (fax === "") {
+        //     Alert.alert("Fax number can't be Empty")
+        // }
+        // else if (email === "") {
+        //     Alert.alert("Email Address can't be Empty")
+        // }
+        // else if (opening === "") {
+        //     Alert.alert("Opening Time can't be Empty")
+        // }
+        // else if (closing === "") {
+        //     Alert.alert("Closing Time can't be Empty")
+        // }
+        // else if (breakTime === "") {
+        //     Alert.alert("Break Time can't be Empty")
+        // }
+        // else if (holiday === "") {
+        //     Alert.alert("Holiday can't be Empty")
+        // }
         else {
             let obj = {
                 _id: Math.random(),

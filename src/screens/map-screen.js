@@ -13,14 +13,11 @@ import { useSelector } from 'react-redux';
 const MapScreen = ({ route }) => {
     const allFranchises = useSelector(state => state.franchise.franchises);
     const { item } = route.params;
-    console.log('====================================');
-    console.log(item.map_address.latitude);
-    console.log('====================================');
     const navigation = useNavigation();
-    const [cLatitude, setCLatitude] = useState("");
-    const [cLongitude, setCLongitude] = useState("");
+    const [cLatitude, setCLatitude] = useState();
+    const [cLongitude, setCLongitude] = useState();
     const [region, setRegion] = useState("");
-    const [currentItem, setCurrentItem] = useState("");
+    const [currentItem, setCurrentItem] = useState();
     const [currentMarker, setCurrentMarker] = useState(0);
     const window = Dimensions.get('window');
     const { width, height } = window
@@ -36,7 +33,7 @@ const MapScreen = ({ route }) => {
 
 
     const handleSnapToItem = (index) => {
-        setCurrentItem(infinity.franchises[index])
+        setCurrentItem(allFranchises[index])
     }
 
 
@@ -116,7 +113,10 @@ const MapScreen = ({ route }) => {
                 style={styles.map}
                 onRegionChange={region => setRegion(region)}
             >
-                {infinity.franchises.map((item) => {
+                {allFranchises.map((item) => {
+                    console.log(';;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;');
+                    console.log(item.map_address.latitude, "------>", cLatitude, ".......", item.map_address.longitude, "------->", cLongitude);
+                    console.log(';;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;');
                     if (cLatitude == item.map_address.latitude && cLongitude == item.map_address.longitude) {
                         return (
                             <Marker
