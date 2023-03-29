@@ -24,7 +24,8 @@ const App = () => {
           headerShown: false,
           tabBarStyle: {
             backgroundColor: Colors.grey40,
-          }
+          },
+          tabBarShowLabel: false
         }} >
           <Tab.Screen
             options={{

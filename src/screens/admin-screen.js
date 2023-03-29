@@ -12,6 +12,7 @@ const AdminScreen = () => {
                     <Text style={styles.text}>infinity</Text>
                 </View>
                 <View style={{ flex: 0.5 }}>
+
                 </View>
             </LinearGradient>
         </SafeAreaView>

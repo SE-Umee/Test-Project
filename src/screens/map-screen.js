@@ -114,9 +114,6 @@ const MapScreen = ({ route }) => {
                 onRegionChange={region => setRegion(region)}
             >
                 {allFranchises.map((item) => {
-                    console.log(';;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;');
-                    console.log(item.map_address.latitude, "------>", cLatitude, ".......", item.map_address.longitude, "------->", cLongitude);
-                    console.log(';;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;');
                     if (cLatitude == item.map_address.latitude && cLongitude == item.map_address.longitude) {
                         return (
                             <Marker

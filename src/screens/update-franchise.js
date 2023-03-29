@@ -39,7 +39,7 @@ const UpdateFranchise = ({ route }) => {
     const [id, setId] = useState("");
     const [branchCode, setBranchCode] = useState("");
     const [category, setCategory] = useState("");
-    const [employees, setEmployees] = useState("");
+    const [employees, setEmployees] = useState(0);
     const [province, setProvince] = useState("");
     const [openingData, setOpeningData] = useState("");
     const [franchiseImage, setFranchiseImage] = useState("");
@@ -141,9 +141,13 @@ const UpdateFranchise = ({ route }) => {
         setLongitude(currentItem.map_address.longitude)
 
     }, [currentItem])
+
     // ====================================images====================================
 
 
+    console.log('====================================');
+    console.log(employees);
+    console.log('====================================');
     const selectImage = () => {
         launchImageLibrary(
             {

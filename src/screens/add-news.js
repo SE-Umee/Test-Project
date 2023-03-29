@@ -105,7 +105,7 @@ const AddNews = () => {
                     <TouchableOpacity
                         onPress={() => selectImage()}
                         style={styles.imageView}>
-                        <Text style={{ alignSelf: 'center' }}>Click</Text>
+                        <Text style={{ alignSelf: 'center' }}>Pick</Text>
                     </TouchableOpacity>
                     :
                     <TouchableOpacity style={styles.imageView} onPress={() => selectImage()}>

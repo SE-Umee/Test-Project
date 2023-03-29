@@ -24,7 +24,7 @@ const NewsCard = ({ item }) => {
                         <Text style={{ ...Typography.medium }}>{item.title}</Text>
                         <Text ellipsizeMode='tail' numberOfLines={3} style={{ maxWidth: "95%" }}>{item.description}</Text>
                         <TouchableOpacity onPress={() => handleClick(item.link)}>
-                            <Text style={styles.linkText}>{item.link}</Text>
+                            <Text style={styles.linkText}>{item.link.toLowerCase()}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.rightView}>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     },
     linkText: {
         ...Typography.small,
-        color: 'green',
+        color: "#53D2DC",
         textDecorationLine: 'underline',
         marginTop: '2%'
     }
