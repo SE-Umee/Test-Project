@@ -24,6 +24,7 @@ const App = () => {
           headerShown: false,
           tabBarStyle: {
             backgroundColor: Colors.grey40,
+            height: 69
           },
           tabBarShowLabel: false
         }} >

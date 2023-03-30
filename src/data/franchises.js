@@ -237,7 +237,7 @@ export const infinity = {
             "opening_date": "13/03/2013",
             "working_hours": {
                 "opening": "09:00 AM",
-                "closing": "10:00 PM",
+                "closing": "02:00 PM",
                 "break_time": "02:00 PM",
                 "holiday": "Sunday"
             },
@@ -409,7 +409,7 @@ export const infinity = {
             "opening_date": "13/03/2015",
             "working_hours": {
                 "opening": "09:00 AM",
-                "closing": "10:00 PM",
+                "closing": "01:00 PM",
                 "break_time": "02:00 PM",
                 "holiday": "Sunday"
             },
