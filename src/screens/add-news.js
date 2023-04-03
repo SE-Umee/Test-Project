@@ -15,9 +15,6 @@ const AddNews = () => {
     const [description, setDescription] = useState("");
     const [link, setLink] = useState("");
     const [image, setImage] = useState("");
-    console.log('====================================');
-    console.log(allNews);
-    console.log('====================================');
     const selectImage = () => {
         launchImageLibrary(
             {
@@ -96,7 +93,7 @@ const AddNews = () => {
             <View style={styles.container}>
                 <Text style={{ fontSize: 20 }}>Link :</Text>
                 <TextInput
-                    placeholder='Link'
+                    placeholder='https://google.com'
                     value={link}
                     onChangeText={setLink}
                     style={styles.textInput}
@@ -108,7 +105,7 @@ const AddNews = () => {
                     <TouchableOpacity
                         onPress={() => selectImage()}
                         style={styles.imageView}>
-                        <Text style={{ alignSelf: 'center' }}>Click</Text>
+                        <Text style={{ alignSelf: 'center' }}>Pick</Text>
                     </TouchableOpacity>
                     :
                     <TouchableOpacity style={styles.imageView} onPress={() => selectImage()}>
@@ -127,7 +124,7 @@ const AddNews = () => {
                 <Text>Add News</Text>
             </TouchableOpacity>
             <ScrollView showsVerticalScrollIndicator={false}>
-                {allNews.map((item) => <View style={{ padding: '2%' }}>
+                {allNews?.map((item) => <View style={{ padding: '2%' }}>
                     <NewsCard item={item} />
                 </View>
                 )}

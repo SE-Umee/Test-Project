@@ -9,6 +9,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Carousel from 'react-native-snap-carousel';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
+
 
 const MapScreen = ({ route }) => {
     const allFranchises = useSelector(state => state.franchise.franchises);
@@ -19,6 +21,9 @@ const MapScreen = ({ route }) => {
     const [region, setRegion] = useState();
     const [currentItem, setCurrentItem] = useState();
     const [currentMarker, setCurrentMarker] = useState(0);
+    const [weather, setWeather] = useState("");
+    const API_KEY = '25e77929c145a7a1cca8d0468f2e98e8';
+    // const URL = `https://api.openweathermap.org/data/2.5/weather?lat=${cLatitude}&lon=${cLongitude}&appid=${API_KEY}`;
     const window = Dimensions.get('window');
     const { width, height } = window
     const LATITUDE_DELTA = 10;
@@ -33,7 +38,7 @@ const MapScreen = ({ route }) => {
 
 
     const handleSnapToItem = (index) => {
-        setCurrentItem(infinity.franchises[index])
+        setCurrentItem(allFranchises[index])
     }
 
 
@@ -42,6 +47,16 @@ const MapScreen = ({ route }) => {
     }, [currentItem])
 
 
+    async function getWeather() {
+        await fetch(URL)
+            .then(res => res.json())
+            .then(data => setWeather(data))
+            .catch(error => console.log("Error ... ", error))
+            ;
+    }
+    useEffect(() => {
+        getWeather();
+    }, [cLatitude, cLongitude])
 
     const onRegionChange = () => {
         setRegion({
@@ -50,8 +65,8 @@ const MapScreen = ({ route }) => {
             latitudeDelta: 1,
             longitudeDelta: 1,
         });
-        setCLatitude(currentItem?.map_address.latitude)
-        setCLongitude(currentItem?.map_address.longitude)
+        setCLatitude(currentItem?.map_address?.latitude)
+        setCLongitude(currentItem?.map_address?.longitude)
     }
 
     useEffect(() => {
@@ -62,7 +77,7 @@ const MapScreen = ({ route }) => {
     const onMarkerClick = (item) => {
         setCLatitude(item.map_address.latitude);
         setCLongitude(item.map_address.longitude);
-        index = infinity.franchises.findIndex(x => x._id === item._id);
+        index = allFranchises.findIndex(x => x._id === item._id);
         setCurrentMarker(index);
     }
 
@@ -113,7 +128,7 @@ const MapScreen = ({ route }) => {
                 style={styles.map}
                 onRegionChange={region => setRegion(region)}
             >
-                {infinity.franchises.map((item) => {
+                {allFranchises.map((item) => {
                     if (cLatitude == item.map_address.latitude && cLongitude == item.map_address.longitude) {
                         return (
                             <Marker

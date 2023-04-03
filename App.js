@@ -2,14 +2,12 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import HomeScreen from "./src/screens/home-screen";
 import StateScreen from './src/screens/state-screen';
-import AdminScreen from './src/screens/admin-screen';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Colors } from "./src/components/styles/style-sheet";
-import { adminScreen, franchiseScreen } from "./src/navigation/navigation"
+import { franchiseScreen, DrawerNav } from "./src/navigation/navigation"
 import { Provider } from 'react-redux'
 import store from './src/redux/store/store';
 
@@ -26,7 +24,9 @@ const App = () => {
           headerShown: false,
           tabBarStyle: {
             backgroundColor: Colors.grey40,
-          }
+            height: 69
+          },
+          tabBarShowLabel: false
         }} >
           <Tab.Screen
             options={{
@@ -51,7 +51,7 @@ const App = () => {
                 <MaterialIcons name="admin-panel-settings" color={color} size={26} />
               ),
             }}
-            name='Admin' component={adminScreen} />
+            name='Admin' component={DrawerNav} />
         </Tab.Navigator>
       </NavigationContainer>
     </Provider>

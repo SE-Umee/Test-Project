@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import { CardImage, Colors, Container, Typography } from './styles/style-sheet';
-import { color } from 'react-native-reanimated';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import StarRating from 'react-native-star-rating';
 import { useNavigation } from '@react-navigation/native';
@@ -30,12 +29,12 @@ const FranchiseCard = ({ input }) => {
 
         if (opening < current && current < closing) {
             return (
-                <Text style={{ color: Colors.green10 }}>Open</Text>
+                <Text style={{ color: Colors.green10 }}>Opened</Text>
             )
         }
         else {
             return (
-                <Text style={{ color: Colors.orange10 }}>Closed</Text>
+                <Text style={{ color: Colors.red10 }}>Closed Now</Text>
             )
         }
 

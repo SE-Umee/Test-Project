@@ -28,7 +28,7 @@ export const Container = {
 }
 
 export const Colors = {
-    orange10: '#F58342',
+    orange10: '#c3522c',
     orange20: '#F8AE84',
     red10: '#CF3B0C',
     grey10: '#404040',
@@ -36,15 +36,18 @@ export const Colors = {
     grey30: '#A3A3A3',
     grey40: '#DEDEDE',
     grey50: '#F8F8F8',
-    green10: '#1AA763',
+    green10: '#044b0e',
     green20: '#00FF00',
     green: '#7EAC77',
     white: '#FFFFFF',
     black: '#000000',
     blue10: '#1A8BFF',
-    lg1: "#EE9CA7",
-    lg2: '#FFDDE1',
-    lg3: '#bdc3c7',
+    // lg1: "#EE9CA7",
+    // lg2: '#FFDDE1',
+    // lg3: '#bdc3c7',
+    lg1: "#09679b",
+    lg2: '#32a3c5',
+    lg3: '#cbeded',
     search1: '#74F2CE',
     search2: '#7CFFCB'
 };
