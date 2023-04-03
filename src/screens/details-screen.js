@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, ScrollView, FlatList, Linking, TouchableOpacity, Platform, Alert } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, Text, View, Image, ScrollView, FlatList, Linking, TouchableOpacity, Platform, Alert, ActivityIndicator } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import { Container, DetailImage, Typography, Colors, AvatarImage } from '../components/styles/style-sheet';
 import StarRating from 'react-native-star-rating';
 import { calculateAverageRating } from '../components/franchise-card';
@@ -8,10 +8,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
+import axios from 'axios';
 
 const DetailsScreen = ({ route }) => {
     const { item } = route.params;
     const navigation = useNavigation();
+    const [weatherData, setWeatherData] = useState({});
+    const [loader, setLoader] = useState(false);
 
     const MakeCall = (number) => {
         let phoneNumber = '';
@@ -29,6 +32,31 @@ const DetailsScreen = ({ route }) => {
 
     const OpenEmail = (email) => {
         Linking.openURL(`mailto:?${email}`)
+    }
+
+
+    const weather = async (lat, lon) => {
+        const API_KEY = '25e77929c145a7a1cca8d0468f2e98e8';
+        try {
+            const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`);
+            setTimeout(() => {
+                setLoader(false);
+                setWeatherData(response.data);
+            }, 2000);
+            setLoader(true);
+
+        } catch (error) {
+            Alert.alert(error)
+        }
+    }
+
+    useEffect(() => {
+        weather(item.map_address.latitude, item.map_address.longitude)
+    }, [item])
+
+    const temp = () => {
+        const temperature = (Math.round(weatherData?.main?.temp - 273.15));
+        return temperature
     }
 
     return (
@@ -194,6 +222,16 @@ const DetailsScreen = ({ route }) => {
                                 </View>
                             </View>
                     ))}
+                </LinearGradient>
+                <LinearGradient colors={[Colors.lg2, Colors.lg1]} style={styles.afterImageContent}>
+                    <Text style={{ ...Typography.normal }}>Weather:</Text>
+                    <View style={styles.contactRows}>
+                        <Text style={{ ...Typography.small }}>Current Weather</Text>
+                        {loader ? <ActivityIndicator /> :
+                            <Text style={{ ...Typography.small }}>{temp()}°C</Text>
+                        }
+                    </View>
+
                 </LinearGradient>
 
             </ScrollView>

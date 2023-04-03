@@ -9,6 +9,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Carousel from 'react-native-snap-carousel';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
+
 
 const MapScreen = ({ route }) => {
     const allFranchises = useSelector(state => state.franchise.franchises);
@@ -16,9 +18,12 @@ const MapScreen = ({ route }) => {
     const navigation = useNavigation();
     const [cLatitude, setCLatitude] = useState();
     const [cLongitude, setCLongitude] = useState();
-    const [region, setRegion] = useState("");
+    const [region, setRegion] = useState();
     const [currentItem, setCurrentItem] = useState();
     const [currentMarker, setCurrentMarker] = useState(0);
+    const [weather, setWeather] = useState("");
+    const API_KEY = '25e77929c145a7a1cca8d0468f2e98e8';
+    // const URL = `https://api.openweathermap.org/data/2.5/weather?lat=${cLatitude}&lon=${cLongitude}&appid=${API_KEY}`;
     const window = Dimensions.get('window');
     const { width, height } = window
     const LATITUDE_DELTA = 10;
@@ -42,6 +47,16 @@ const MapScreen = ({ route }) => {
     }, [currentItem])
 
 
+    async function getWeather() {
+        await fetch(URL)
+            .then(res => res.json())
+            .then(data => setWeather(data))
+            .catch(error => console.log("Error ... ", error))
+            ;
+    }
+    useEffect(() => {
+        getWeather();
+    }, [cLatitude, cLongitude])
 
     const onRegionChange = () => {
         setRegion({
@@ -62,7 +77,7 @@ const MapScreen = ({ route }) => {
     const onMarkerClick = (item) => {
         setCLatitude(item.map_address.latitude);
         setCLongitude(item.map_address.longitude);
-        index = infinity.franchises.findIndex(x => x._id === item._id);
+        index = allFranchises.findIndex(x => x._id === item._id);
         setCurrentMarker(index);
     }
 
