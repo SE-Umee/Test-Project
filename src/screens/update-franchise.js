@@ -11,8 +11,8 @@ import {
     Alert,
     FlatList
 } from 'react-native'
-import React, { useState, useCallback, useRef, useEffect } from 'react'
-import { Colors, Container, InputText, Typography } from '../components/styles/style-sheet'
+import React, { useState, useRef, useEffect } from 'react'
+import { Colors, InputText, Typography } from '../components/styles/style-sheet'
 import LinearGradient from 'react-native-linear-gradient'
 import SelectDropdown from 'react-native-select-dropdown'
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -24,7 +24,6 @@ import MapView, { Marker } from 'react-native-maps'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -80,10 +79,13 @@ const UpdateFranchise = ({ route }) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isAwardDatePickerVisible, setAwardDatePickerVisibility] = useState(false);
     const [isManagerDatePickerVisible, setManagerDatePickerVisibility] = useState(false);
+    const [isManagerDOBPickerVisible, setManagerDOBPickerVisible] = useState(false);
+    const [isManagerJoiningPickerVisible, setManagerJoiningPickerVisible] = useState(false);
     const [isOpeningTimePickerVisible, setOpeningTimePickerVisible] = useState(false);
     const [isClosingTimePickerVisible, setClosingTimePickerVisible] = useState(false);
     const [isBreakTimePickerVisible, setBreakTimePickerVisible] = useState(false);
     const provinces = ["Punjab ", "KPK", "Sindh", "Balochistan", "Gilgit-Baltistan", "Islamabad"];
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     const selectAwardType = ["Gold", "Silver"];
     const refMap = useRef(null);
     const [region, setRegion] = useState();
@@ -243,6 +245,12 @@ const UpdateFranchise = ({ route }) => {
         else if (type === "managerAward") {
             setManagerDatePickerVisibility(true)
         }
+        else if (type === "dob") {
+            setManagerDOBPickerVisible(true)
+        }
+        else if (type === "joining") {
+            setManagerJoiningPickerVisible(true)
+        }
     };
 
     const hideDatePicker = (type) => {
@@ -255,18 +263,30 @@ const UpdateFranchise = ({ route }) => {
         else if (type === "managerAward") {
             setManagerDatePickerVisibility(false)
         }
+        else if (type === "dob") {
+            setManagerDOBPickerVisible(false)
+        }
+        else if (type === "joining") {
+            setManagerJoiningPickerVisible(false)
+        }
     };
 
     const handleDateConfirm = (date, type) => {
-        const inputString = moment(date).format('DD/MM/YYYY');
+        const formattedDate = moment(date).format('DD/MM/YYYY');
         if (type === "opening") {
-            setOpeningData(inputString);
+            setOpeningData(formattedDate);
         }
         else if (type === "award") {
-            setAwardDate(inputString);
+            setAwardDate(formattedDate);
         }
         else if (type === "managerAward") {
-            setManagerAwardDate(inputString)
+            setManagerAwardDate(formattedDate)
+        }
+        else if (type === "dob") {
+            setDOB(formattedDate)
+        }
+        else if (type === "joining") {
+            setManagerJoiningDate(formattedDate)
         }
         hideDatePicker(type);
     };
@@ -490,10 +510,6 @@ const UpdateFranchise = ({ route }) => {
         setAwards(filtered)
     }
 
-    // const handleDateChange = (date) => {
-    //     const inputString = moment(date).format('DD/MM/YYY');
-    //     setOpeningData(inputString);
-    // };
 
     const RemoveManagerAward = (currentAward) => {
         const filtered = managerAwards.filter((award) => award.type != currentAward.type && award.date != currentAward.date);
@@ -642,7 +658,7 @@ const UpdateFranchise = ({ route }) => {
                             <Text style={styles.addManager}>Edit Location</Text>
                         </TouchableOpacity>
                         {addLocation ?
-                            <View style={{ maxHeight: 300, maxWidth: "100%", }}>
+                            <View style={{ maxHeight: 300, maxWidth: "100%", marginBottom: "10%" }}>
                                 <TouchableOpacity style={{ alignSelf: 'center', margin: "2%" }} onPress={() => AddLocation()}>
                                     <Text style={styles.addManager}>Change Location</Text>
                                 </TouchableOpacity>
@@ -761,13 +777,17 @@ const UpdateFranchise = ({ route }) => {
                             style={{ ...InputText }}
                         />
                         <View style={styles.inPutView}>
-                            <TextInput
-                                value={dob}
-                                placeholder='Branch Manager DOB'
-                                placeholderTextColor={Colors.grey20}
-                                onChangeText={setDOB}
-                                style={{ ...InputText, maxWidth: 150 }}
-                            />
+                            <TouchableOpacity onPress={() => showDatePicker("dob")} style={{ ...InputText, maxWidth: 155 }}>
+                                {dob != "" ?
+                                    <Text>
+                                        {dob}
+                                    </Text>
+                                    :
+                                    <Text style={styles.addManager}>
+                                        Branch Manager DOB
+                                    </Text>
+                                }
+                            </TouchableOpacity>
                             <TextInput
                                 value={domicile}
                                 placeholder='Branch Manager Domicile'
@@ -776,13 +796,24 @@ const UpdateFranchise = ({ route }) => {
                                 style={{ ...InputText, maxWidth: 150 }}
                             />
                         </View>
-                        <TextInput
+                        {/* <TextInput
                             value={managerJoiningDate}
                             placeholder='Branch Manager Joining Date'
                             placeholderTextColor={Colors.grey20}
                             onChangeText={setManagerJoiningDate}
                             style={{ ...InputText }}
-                        />
+                        /> */}
+                        <TouchableOpacity onPress={() => showDatePicker("joining")} style={{ ...InputText }}>
+                            {managerJoiningDate != "" ?
+                                <Text>
+                                    {managerJoiningDate}
+                                </Text>
+                                :
+                                <Text style={styles.addManager}>
+                                    Branch Manager DOB
+                                </Text>
+                            }
+                        </TouchableOpacity>
                         <Text style={styles.headingText}>Edit Awards</Text>
                         <View style={styles.afterImageContent}>
                             {managerAwards.map((item) => (
@@ -831,13 +862,6 @@ const UpdateFranchise = ({ route }) => {
                                             setManagerAwardType(selectedItem)
                                         }}
                                     />
-                                    {/* <TextInput
-                                        value={managerAwardDate}
-                                        placeholder='Date'
-                                        placeholderTextColor={Colors.grey20}
-                                        onChangeText={setManagerAwardDate}
-                                        style={{ ...InputText, minWidth: 110, maxWidth: 110 }}
-                                    /> */}
                                     <TouchableOpacity onPress={() => showDatePicker("managerAward")} style={{ ...InputText, minWidth: 110, maxWidth: 110 }}>
                                         {managerAwardDate != "" ?
                                             <Text>
@@ -874,10 +898,8 @@ const UpdateFranchise = ({ route }) => {
                             :
                             <></>
                         }
-                        {/* </LinearGradient> */}
                     </View>
                     <View>
-                        {/* <LinearGradient colors={[Colors.lg2, Colors.lg1]}> */}
                         <Text style={styles.headingText}>Edit Working Hours *</Text>
                         <View style={styles.inPutView}>
                             <TouchableOpacity onPress={() => showTimePicker('opening')} style={{ ...InputText, maxWidth: 155 }}>
@@ -915,12 +937,22 @@ const UpdateFranchise = ({ route }) => {
                                     </Text>
                                 }
                             </TouchableOpacity>
-                            <TextInput
+                            {/* <TextInput
                                 value={holiday}
                                 placeholder='Branch Holiday'
                                 placeholderTextColor={Colors.grey20}
                                 onChangeText={setHoliday}
                                 style={{ ...InputText, maxWidth: 150 }}
+                            /> */}
+                            <SelectDropdown
+                                defaultButtonText={"Holiday"}
+                                data={days}
+                                buttonStyle={styles.holyDayDropDown}
+                                renderDropdownIcon={() => <AntDesign name='down' size={18} />
+                                }
+                                onSelect={(selectedItem, index) => {
+                                    setHoliday(selectedItem)
+                                }}
                             />
                         </View>
                         {/* </LinearGradient> */}
@@ -997,13 +1029,6 @@ const UpdateFranchise = ({ route }) => {
                                             setAwardType(selectedItem)
                                         }}
                                     />
-                                    {/* <TextInput
-                                        value={awardDate}
-                                        placeholder='Date'
-                                        placeholderTextColor={Colors.grey20}
-                                        onChangeText={setAwardDate}
-                                        style={{ ...InputText, minWidth: 110, maxWidth: 110 }}
-                                    /> */}
                                     <TouchableOpacity onPress={() => showDatePicker("award")} style={{ ...InputText, minWidth: 110, maxWidth: 110 }}>
                                         {awardDate != "" ?
                                             <Text>
@@ -1074,6 +1099,19 @@ const UpdateFranchise = ({ route }) => {
                     onConfirm={(data) => handleDateConfirm(data, 'managerAward')}
                     onCancel={() => hideDatePicker("managerAward")}
                 />
+                <DateTimePickerModal
+                    isVisible={isManagerDOBPickerVisible}
+                    mode="date"
+                    onConfirm={(data) => handleDateConfirm(data, 'dob')}
+                    onCancel={() => hideDatePicker("dob")}
+                />
+                <DateTimePickerModal
+                    isVisible={isManagerJoiningPickerVisible}
+                    mode="date"
+                    onConfirm={(data) => handleDateConfirm(data, 'joining')}
+                    onCancel={() => hideDatePicker("joining")}
+                />
+
                 <DateTimePickerModal
                     isVisible={isOpeningTimePickerVisible}
                     mode="time"
@@ -1182,5 +1220,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: "space-between",
         width: '100%'
+    },
+    holyDayDropDown: {
+        ...InputText,
+        maxWidth: 150,
+        height: "80%",
+        backgroundColor: 'transparent',
     },
 })

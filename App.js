@@ -19,8 +19,8 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <Tab.Navigator screenOptions={{
-          tabBarActiveTintColor: Colors.orange10,
-          tabBarInactiveTintColor: Colors.green10,
+          tabBarActiveTintColor: "#289504",
+          tabBarInactiveTintColor: "#e66c28",
           headerShown: false,
           tabBarStyle: {
             backgroundColor: Colors.grey40,

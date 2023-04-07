@@ -67,7 +67,7 @@ const DetailsScreen = ({ route }) => {
                 <View>
                     <Image source={{ uri: item.image }} style={{ ...DetailImage }} />
                     <View style={styles.positionView}>
-                        <Text style={{ ...Typography.medium }}>{item.code} ( {item?.category} )</Text>
+                        <Text style={{ ...Typography.medium, color: Colors.black10 }}>{item.code} ( {item?.category} )</Text>
                         <StarRating
                             disabled={true}
                             maxStars={5}
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: '2%',
         backgroundColor: 'white',
-        opacity: 0.5
+        opacity: 0.7
     },
     managerView: {
         flexDirection: 'row',

@@ -21,9 +21,6 @@ const MapScreen = ({ route }) => {
     const [region, setRegion] = useState();
     const [currentItem, setCurrentItem] = useState();
     const [currentMarker, setCurrentMarker] = useState(0);
-    const [weather, setWeather] = useState("");
-    const API_KEY = '25e77929c145a7a1cca8d0468f2e98e8';
-    // const URL = `https://api.openweathermap.org/data/2.5/weather?lat=${cLatitude}&lon=${cLongitude}&appid=${API_KEY}`;
     const window = Dimensions.get('window');
     const { width, height } = window
     const LATITUDE_DELTA = 10;
@@ -47,17 +44,6 @@ const MapScreen = ({ route }) => {
     }, [currentItem])
 
 
-    async function getWeather() {
-        await fetch(URL)
-            .then(res => res.json())
-            .then(data => setWeather(data))
-            .catch(error => console.log("Error ... ", error))
-            ;
-    }
-    useEffect(() => {
-        getWeather();
-    }, [cLatitude, cLongitude])
-
     const onRegionChange = () => {
         setRegion({
             latitude: currentItem?.map_address?.latitude,
@@ -74,6 +60,7 @@ const MapScreen = ({ route }) => {
         setCLongitude(item.map_address.longitude)
     }, []);
 
+    //====================================Click On marker Direct====================================
     const onMarkerClick = (item) => {
         setCLatitude(item.map_address.latitude);
         setCLongitude(item.map_address.longitude);
@@ -103,7 +90,6 @@ const MapScreen = ({ route }) => {
         });
     };
 
-
     useEffect(() => {
         setTimeout(() => {
             if (currentItem === undefined) {
@@ -116,6 +102,21 @@ const MapScreen = ({ route }) => {
             }
         }, 200);
     }, [item, cLatitude, cLongitude,]);
+
+    useEffect(() => {
+        onChangeRegion();
+    }, [cLatitude, cLongitude])
+
+
+    const onChangeRegion = () => {
+        setRegion({
+            latitude: cLatitude,
+            longitude: cLongitude,
+            latitudeDelta: 1,
+            longitudeDelta: 1,
+        });
+    }
+
 
     return (
         <View style={{ ...Container.mainContainer }}>
@@ -183,21 +184,21 @@ const MapScreen = ({ route }) => {
                         <LinearGradient colors={[Colors.lg1, Colors.lg2]} style={styles.franchiseContainer}>
                             <Text style={{ ...Typography.normal, alignSelf: 'center' }}>{item?.code} ({item?.category})</Text>
                             <View style={styles.contactRows}>
-                                <Text>Call : </Text>
-                                <Text>{item?.contact?.cell}</Text>
+                                <Text style={{ ...Typography.small }}>Call : </Text>
+                                <Text style={{ ...Typography.small }}>{item?.contact?.cell}</Text>
                             </View>
                             <View style={styles.contactRows}>
-                                <Text>Email : </Text>
-                                <Text>{item?.contact?.email}</Text>
+                                <Text style={{ ...Typography.small }}>Email : </Text>
+                                <Text style={{ ...Typography.small }}>{item?.contact?.email}</Text>
                             </View>
                             <View style={styles.contactRows}>
-                                <Text>City : </Text>
-                                <Text>{item?.address?.city}</Text>
+                                <Text style={{ ...Typography.small }}>City : </Text>
+                                <Text style={{ ...Typography.small }}>{item?.address?.city}</Text>
                             </View>
                         </LinearGradient>
                     }
                     sliderWidth={400}
-                    itemWidth={350}
+                    itemWidth={363}
                     onSnapToItem={handleSnapToItem}
                 />
 
