@@ -7,8 +7,10 @@ import actionTypes from '../redux/action-types';
 import { useSelector } from 'react-redux';
 import { addingNews } from "../redux/actions/news-action"
 import NewsCard from '../components/news-card';
-
+import { useNavigation } from '@react-navigation/native';
+import Entypo from 'react-native-vector-icons/Entypo';
 const AddNews = () => {
+    const navigation = useNavigation();
     const dispatch = useDispatch();
     const allNews = useSelector(state => state.news.news)
     const [title, setTitle] = useState("");
@@ -62,13 +64,17 @@ const AddNews = () => {
             setTitle("")
             setDescription("")
             setLink("")
-            setImage("")
+            setImage("");
         }
 
     }
 
     return (
         <SafeAreaView style={styles.mainContainer}>
+            <Entypo name='menu' size={24}
+                onPress={() => navigation.openDrawer()}
+                style={{ marginLeft: "2%" }}
+            />
             <View style={styles.topView}>
                 <Text style={{ fontSize: 30 }}>News</Text>
             </View>

@@ -72,7 +72,7 @@ const FranchiseCard = ({ input }) => {
                                                         fullStarColor={"#FDCC0D"}
                                                         starSize={15}
                                                     />
-                                                    <Text style={{ fontWeight: '400' }}> ({calculateAverageRating(item.public_ratings).toFixed(1)})</Text>
+                                                    <Text style={{ fontWeight: '400', color: Colors.orange10 }}> ({calculateAverageRating(item.public_ratings).toFixed(1)})</Text>
                                                 </View>
 
                                             </View>
@@ -111,7 +111,7 @@ const FranchiseCard = ({ input }) => {
                                                         fullStarColor={"#FDCC0D"}
                                                         starSize={15}
                                                     />
-                                                    <Text style={{ fontWeight: '400' }}> ({calculateAverageRating(item.public_ratings).toFixed(1)})</Text>
+                                                    <Text style={{ fontWeight: '400', color: Colors.orange10 }}> ({calculateAverageRating(item.public_ratings).toFixed(1)})</Text>
                                                 </View>
 
                                             </View>

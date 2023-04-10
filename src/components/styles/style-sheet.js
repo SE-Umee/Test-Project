@@ -6,17 +6,21 @@ export const Typography = {
     large: {
         fontSize: 30,
         fontWeight: "500"
+
     },
     medium: {
         fontSize: 18,
-        fontWeight: "800"
+        fontWeight: "800",
+        color: '#FFFFFF'
     },
     normal: {
         fontSize: 14,
-        fontWeight: "600"
+        fontWeight: "600",
+        color: '#74F2CE',
     },
     small: {
         fontSize: 12,
+        color: '#FFFFFF'
     },
 };
 
@@ -28,15 +32,17 @@ export const Container = {
 }
 
 export const Colors = {
-    orange10: '#c3522c',
+    // orange10: '#c3522c',
+    orange10: '#b7e8eb',
     orange20: '#F8AE84',
-    red10: '#CF3B0C',
+    red10: '#e86c28',
     grey10: '#404040',
     grey20: '#6D6D6D',
     grey30: '#A3A3A3',
     grey40: '#DEDEDE',
     grey50: '#F8F8F8',
-    green10: '#044b0e',
+    // green10: '#044b0e',
+    green10: '#9cd494',
     green20: '#00FF00',
     green: '#7EAC77',
     white: '#FFFFFF',

@@ -54,6 +54,7 @@ const HomeScreen = () => {
                         onChangeText={setSearch}
                         value={search}
                         placeholder="Search Franchise"
+                        placeholderTextColor={Colors.grey40}
                     />
                 </LinearGradient>
             </View>
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
         margin: "3%",
         borderRadius: 4,
         padding: '1%',
-        borderColor: Colors.grey30
+        borderColor: Colors.grey50
 
     },
     franchisesComponent: {

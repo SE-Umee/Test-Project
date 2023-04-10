@@ -39,10 +39,18 @@ const NewsStack = () => {
 const DrawerNav = () => {
     const Drawer = createDrawerNavigator();
     return (
-        <Drawer.Navigator>
-            <Drawer.Screen name='Admin' component={AdminScreen} />
-            <Drawer.Screen name='CreateFranchise' component={CreateFranchise} />
-            <Drawer.Screen name="News Stack" component={NewsStack} />
+        <Drawer.Navigator screenOptions={{
+            headerShown: false,
+        }}>
+            <Drawer.Screen name='Admin' component={AdminScreen} options={{
+                title: "Admin"
+            }} />
+            <Drawer.Screen name='CreateFranchise' component={CreateFranchise} options={{
+                title: "Create Franchise"
+            }} />
+            <Drawer.Screen name="News Stack" component={NewsStack} options={{
+                title: "Add News"
+            }} />
         </Drawer.Navigator>
     )
 };
